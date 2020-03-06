@@ -1,8 +1,8 @@
-Name:
+Name: Alex Ali
 
-EID:
+EID: aca2948
 
-Team Number:
+Team Number: F3
 
 ## Questions
 
@@ -40,4 +40,4 @@ Team Number:
 
 9. Screenshot of your Blynk App:
 
-    ![your image here->](img/blynky.png)
+    ![your image here->](img/blynky.jpeg)
