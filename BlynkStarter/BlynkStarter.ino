@@ -60,8 +60,8 @@ void setup()
   Blynk.begin(auth, ssid, pass);
   timer.setInterval(10L, myTimerEvent);
   pinMode(LED, OUTPUT);
-//  ledcSetup(ledChannel, freq, resolution);
-//  ledcAttachPin(LED, ledChannel);
+  ledcSetup(ledChannel, freq, resolution);
+  ledcAttachPin(LED, ledChannel);
 }
 
 void loop()
@@ -111,15 +111,15 @@ BLYNK_WRITE(V0)//button
   }
 }
 
-//BLYNK_WRITE(V2)//slider
-//{
-//  int pinValue = param.asInt();
-//
-//  brightness = pinValue;
-//
-//  if(ledState == 1)
-//  {
-//    ledcWrite(ledChannel, brightness);
-//  }
-//
-//}
+BLYNK_WRITE(V2)//slider
+{
+  int pinValue = param.asInt();
+
+  brightness = pinValue;
+
+  if(ledState == 1)
+  {
+    ledcWrite(ledChannel, brightness);
+  }
+
+}
