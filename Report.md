@@ -40,4 +40,4 @@ Team Number: F3
 
 9. Screenshot of your Blynk App:
 
-    ![your image here->](img/blynky.jpeg)
+    ![your image here->](img/blynky.png)
