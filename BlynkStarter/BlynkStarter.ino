@@ -46,22 +46,45 @@ const int ledChannel = 0;
 const int freq = 5000;
 const int resolution = 10;
 
-
-int ledState = 0;
-int brightness = 0;
 BlynkTimer timer;
-int timeCounter = 0;
-String message = "";
+
+int time_count = 0; // timer counter global variable
+String content = "";  // null string constant ( an empty string )
+
+void myTimerEvent() // Every 10 ms
+{
+    if (time_count % 25 == 0) { // every 250 ms
+        // Do thing that needs to happen every 0.25 seconds
+    }
+    if (time_count == 100){
+        Blynk.virtualWrite(V3, millis() / 1000); // Write the arduino uptime every second
+        time_count = 0; // reset time counter
+    }
+    else {
+        // Send serial data to Blynk terminal
+        char character;
+        while(Serial.available()) { // Check if serial is available every 10 ms
+            character = Serial.read();
+            content.concat(character);
+        }
+        if (content != "") {
+            Blynk.virtualWrite(V4, content);
+            content = ""; // Clear String
+        }  
+    }
+    time_count += 1; // Increment on every tick
+}
 
 void setup()
 {
   // Serial Monitor
   Serial.begin(115200);
   Blynk.begin(auth, ssid, pass);
-  timer.setInterval(10L, myTimerEvent);
-  pinMode(LED, OUTPUT);
   ledcSetup(ledChannel, freq, resolution);
   ledcAttachPin(LED, ledChannel);
+
+  // Setup a function to be called every second
+  timer.setInterval(10L, myTimerEvent);
 }
 
 void loop()
@@ -70,56 +93,23 @@ void loop()
   timer.run();
 }
 
-void myTimerEvent()
-{
-  if(timeCounter == 100)
-  {
-    Blynk.virtualWrite(V3, millis() / 1000);
-    timeCounter = 0;
-  }
-
-  char character;
-
-  while(Serial.available())
-  {
-    character = Serial.read();
-    message.concat(character);
-  }
-
-  if(message != "")
-  {
-    Blynk.virtualWrite(V3, message);
-    message = "";
-  }
-
-  timeCounter ++;
-}
-
-BLYNK_WRITE(V0)//button
+BLYNK_WRITE(V0)
 {
   int pinValue = param.asInt();
 
   if(pinValue == 0)
   {
-    ledState = 0;
-    ledcWrite(ledChannel, 0);
+     ledcWrite(ledChannel, 0);
   }
   else
   {
-    ledState = 1;
-    ledcWrite(ledChannel, brightness);
+     ledcWrite(ledChannel, 1023);
   }
 }
 
-BLYNK_WRITE(V2)//slider
+BLYNK_WRITE(V2)
 {
   int pinValue = param.asInt();
-
-  brightness = pinValue;
-
-  if(ledState == 1)
-  {
-    ledcWrite(ledChannel, brightness);
-  }
+  ledcWrite(ledChannel, pinValue);
 
 }
